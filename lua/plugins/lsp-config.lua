@@ -1,12 +1,17 @@
 return {
 	{
 		"williamboman/mason.nvim",
+		lazy = false,
 		config = function()
 			require("mason").setup()
 		end,
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
+		lazy = false,
+		opts = {
+			auto_install = true,
+		},
 		config = function()
 			require("mason-lspconfig").setup({
 				ensure_installed = {
@@ -14,7 +19,7 @@ return {
 					"bashls",
 					"tsserver",
 					"jdtls",
-					-- "rust_analyzer",
+					"rust_analyzer",
 					-- "clangd",
 					-- "cssls",
 				},
@@ -23,12 +28,16 @@ return {
 	},
 	{
 		"neovim/nvim-lspconfig",
+		lazy = false,
 		config = function()
 			local config = require("lspconfig")
-			config.lua_ls.setup({})
-			config.tsserver.setup({})
-			config.bashls.setup({})
-			config.jdtls.setup({})
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+			config.lua_ls.setup({ capabilities = capabilities })
+			config.tsserver.setup({ capabilities = capabilities })
+			config.bashls.setup({ capabilities = capabilities })
+			config.jdtls.setup({ capabilities = capabilities })
+			config.rust_analyzer.setup({ capabilities = capabilities })
 
 			local dartExcludedFolders = {
 				vim.fn.expand("$HOME/AppData/Local/Pub/Cache"),
@@ -37,7 +46,7 @@ return {
 				vim.fn.expand("$HOME/development/flutter/bin/flutter"),
 			}
 
-      config["dartls"].setup({
+			config["dartls"].setup({
 				capabilities = capabilities,
 				cmd = {
 					"dart",
@@ -66,7 +75,7 @@ return {
 
 			vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
 			vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
-			vim.keymap.set({ "n", "v" }, "<A-enter>", vim.lsp.buf.code_action, {})
+			vim.keymap.set({ "n", "v" }, "<A-S-enter>", vim.lsp.buf.code_action, {})
 		end,
 	},
 }

@@ -9,6 +9,6 @@ return {
 		local map = vim.keymap.set
 
 		-- map('i', '<C-l>', SuggestOneCharacter, { expr = true, remap = false })
-		map("i", "<S-Tab>", SuggestOneWord, { expr = true, remap = false })
+		map("i", "<C-Tab>", SuggestOneWord, { expr = true, remap = false })
 	end,
 }

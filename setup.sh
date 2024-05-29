@@ -1,5 +1,10 @@
 #!/bin/bash
 
+install_arch() {
+    sudo pacman -Syu --noconfirm
+    sudo pacman -S --noconfirm $1
+}
+
 install_ubuntu() {
     sudo apt update
     sudo apt install -y $1
@@ -11,6 +16,12 @@ install_macos() {
 
 install_ohmyzsh() {
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+}
+
+install_fonts_arch() {
+    mkdir -p ~/.local/share/fonts
+    cp -r $1 ~/.local/share/fonts
+    fc-cache -fv
 }
 
 install_fonts_ubuntu() {
@@ -34,11 +45,19 @@ download_and_install_fonts() {
 }
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    OS="Ubuntu"
-    install_cmd=install_ubuntu
+    if command -v pacman &> /dev/null; then
+        OS="Arch Linux"
+        install_cmd=install_arch
+        install_fonts_cmd=install_fonts_arch
+    else
+        OS="Ubuntu"
+        install_cmd=install_ubuntu
+        install_fonts_cmd=install_fonts_ubuntu
+    fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     OS="macOS"
     install_cmd=install_macos
+    install_fonts_cmd=install_fonts_macos
 else
     echo "Unsupported OS."
     exit 1
